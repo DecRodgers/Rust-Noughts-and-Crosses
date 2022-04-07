@@ -95,7 +95,7 @@ fn main() {
         }
       }
       println!();      
-      game_over = check_board(&board);
+      if turn_num > 4 {game_over = check_board(&board);} //Can only get set of 3 on turn 5 or after
       if game_over{
         match player_turn{
           true => {display_board(&board);println!("\nCongratulations, you won this game!"); break;},
