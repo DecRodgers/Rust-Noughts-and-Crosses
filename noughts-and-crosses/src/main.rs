@@ -84,7 +84,7 @@ fn main() {
         loop{
           let cpu_choice = rand::thread_rng().gen_range(MIN_VALUE..(MAX_VALUE+1));  //+1 necessary otherwise it excludes picking 9          
           if choices_made.contains(&cpu_choice) { 
-            //println!("'{}' has already been picked, picking again.",cpu_guess);
+            //println!("'{}' has already been picked, picking again.",cpu_guess);   //debug println
             continue;                
           } else {
             println!("CPU choice is {}\n",cpu_choice);
@@ -131,7 +131,7 @@ fn main() {
     };    
   }
   //End Message
-  print!("\nThanks for Playing!")
+  print!("\nThanks for Playing!");
 }
 
 fn display_board(board : &HashMap<i32, &str>) {
