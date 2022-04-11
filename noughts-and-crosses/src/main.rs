@@ -5,7 +5,6 @@ use rand::Rng;
 /*
   COMP10068 Secure Programming
   Assignment 2 - T2 2022
-  Banner No: B00371286
 */
 
 fn main() {
