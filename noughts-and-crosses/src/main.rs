@@ -8,7 +8,7 @@ use rand::Rng;
 */
 
 fn main() {
-  //MAX and MIN contraint values
+  //MAX and MIN constraint values
   const MAX_VALUE :i32 = 9;
   const MIN_VALUE :i32 = 1;
   let mut playing = true;  
