@@ -4,11 +4,10 @@ use rand::Rng;
 /*
   COMP10068 Secure Programming
   Assignment 2 - T2 2022
-  Banner No: B00371286
 */
 
 fn main() {
-  //MAX and MIN contraint values
+  //MAX and MIN constraint values
   const MAX_VALUE :i32 = 9;
   const MIN_VALUE :i32 = 1;
   let mut playing = true;  
