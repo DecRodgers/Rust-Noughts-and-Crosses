@@ -1,5 +1,4 @@
 use std::io;
-use std::{thread, time};
 use std::collections::HashMap;
 use rand::Rng;
 /*
@@ -18,7 +17,7 @@ fn main() {
     println!("\n### Welcome to Naughts and Crosses! ###\n");
     //Initalise Game variables
     let mut game_over : bool = false;    
-    let mut turn_num = 1;
+    let mut turn_number : i32 = 1;
     let mut board: HashMap<i32, &str> = HashMap::from([
       (1,""), (2,""), (3,""),
       (4,""), (5,""), (6,""),
@@ -30,7 +29,7 @@ fn main() {
     //Decide who is X and O, X starts the game
     //Even - Player, Odd - CPU
     let mut player_turn : bool = false;
-    let rng_num = rand::thread_rng().gen_range(MIN_VALUE..MAX_VALUE);
+    let rng_num :i32 = rand::thread_rng().gen_range(MIN_VALUE..MAX_VALUE);
     println!("Deciding who goes first, random number drawn was '{}'",rng_num);
     if rng_num % 2 == 0 {
       player_turn = true; 
@@ -39,29 +38,27 @@ fn main() {
     } else if !player_turn{      
       player_symbol.push_str("O"); cpu_symbol.push_str("X");
       println!("Odd Number - CPU goes first! You are {}'s",player_symbol);
-    }
-    //Small pause to let player see who goes first
-    println!("\nGame starting in...");
-    for n in(1..4).rev() {
-      println!("{}...",n);
-      thread::sleep(time::Duration::from_secs(1));      
-    }
+    }    
+    //Display the empty board before game start to show the numbered grid
+    println!();
+    display_board(&board);
     //Inner Main Game Loop
     loop{          
-      if turn_num == 10{game_over = !game_over};
+      if turn_number == 10{game_over = !game_over};
       if game_over {
+        display_board(&board);
         print!{"The game was a draw!\n"};
         break;
       }
-      println!("\n# Turn {} #\n", turn_num);
+      println!("\n# Turn {} #\n", turn_number);
       if player_turn {
         loop{     
           display_board(&board);
           println!("Pick a number between {} and {}!", MIN_VALUE,MAX_VALUE);
-          let mut guess = String::new();     
-          io::stdin().read_line(&mut guess)
+          let mut player_choice = String::new();     
+          io::stdin().read_line(&mut player_choice)
             .expect("Failed to read line");
-          let choice: i32 = match guess.trim().parse() {
+          let choice: i32 = match player_choice.trim().parse() {
             Ok(num) => num,      
             Err(_)  => {println!("Incorrect value, please try again\n"); continue;}, 
           };
@@ -95,15 +92,15 @@ fn main() {
         }
       }
       println!();      
-      if turn_num > 4 {game_over = check_board(&board);} //Can only get set of 3 on turn 5 or after
+      if turn_number > 4 {game_over = check_board(&board);} //Can only get set of 3 on turn 5 or after
       if game_over{
         match player_turn{
           true => {display_board(&board);println!("\nCongratulations, you won this game!"); break;},
           false => {display_board(&board);println!("\nThe CPU won, better luck next game!"); break;},
         }
       }      
-      turn_num=turn_num+1;
-      player_turn = !player_turn;
+      turn_number=&turn_number+1;
+      player_turn = !&player_turn;
     };    
     //Game Over - print game moves
     println!("\n*** Game Over! ***\n");
