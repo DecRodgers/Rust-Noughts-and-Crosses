@@ -43,7 +43,7 @@ fn main() {
     display_board(&board);
     //Inner Main Game Loop
     loop{          
-      if turn_number == 10{game_over = !game_over};
+      if turn_number > MAX_VALUE{game_over = !game_over};
       if game_over {
         display_board(&board);
         print!{"The game was a draw!\n"};
@@ -133,10 +133,10 @@ fn main() {
 fn display_board(board : &HashMap<i32, &str>) {
   let empty_val = "";
   for n in 1..10 {
-    let grid_value = board.get(&n).unwrap();
-    if grid_value == &empty_val {print!("{} ",n)}
+    if board.get(&n).unwrap() == &empty_val {
+      print!("{} ",n)}
     else {      
-      print!("{} ",&grid_value)
+      print!("{} ",board.get(&n).unwrap())
     }
     if n % 3 == 0 {print!("\n")};      
   }  
@@ -162,7 +162,7 @@ fn check_board(board : &HashMap<i32, &str>) -> bool {
     if board.get(&4).unwrap() == board.get(&5).unwrap() && board.get(&5).unwrap() == board.get(&6).unwrap(){three_found = true} //middle row
   }  
   if board.get(&7).unwrap() != &empty_val{
-    if board.get(&7).unwrap() == board.get(&8).unwrap() && board.get(&8).unwrap() == board.get(&9).unwrap(){three_found = true} //bottom row
+    if board.get(&7).unwrap() == board.get(&8).unwrap() && board.get(&8).unwrap() == board.get(&9).unwrap(){three_found = true} //third row
   };
   return three_found;  
 }
