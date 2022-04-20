@@ -6,7 +6,6 @@ use rand::Rng;
   Assignment 2 - T2 2022
   Banner No.: B00371286
 */
-
 fn main() {
   //MAX and MIN constraint values
   const MAX_VALUE :i32 = 9;
@@ -27,12 +26,9 @@ fn main() {
     let mut player_symbol = String::new();   
     let mut cpu_symbol = String::new();
     //Decide who is X and O, X starts the game
-    //Even - Player, Odd - CPU
-    let mut player_turn : bool = false;
-    let rng_num :i32 = rand::thread_rng().gen_range(MIN_VALUE..MAX_VALUE);
-    println!("Deciding who goes first, random number drawn was '{}'",rng_num);
-    if rng_num % 2 == 0 {
-      player_turn = true; 
+    //Even - Player, Odd - CPU     
+    let mut player_turn :bool = decide_start(MAX_VALUE, MIN_VALUE);    
+    if player_turn {     
       player_symbol.push_str("X"); cpu_symbol.push_str("O");
       println!("Even Number - Player goes first! You are {}'s",player_symbol);
     } else if !player_turn{      
@@ -55,14 +51,14 @@ fn main() {
         let player_choice :i32 = player_move(MAX_VALUE, MIN_VALUE, &board, &choices_made);
         choices_made.push(player_choice);
         board.insert(player_choice, &player_symbol);
-        println!(); display_board(&board);                                           
+        display_board(&board);                                           
       } else if !player_turn{        
         let cpu_choice :i32 = cpu_move(MAX_VALUE, MIN_VALUE, &choices_made);
         choices_made.push(cpu_choice);
         board.insert(cpu_choice, &cpu_symbol);
         display_board(&board);        
       }                
-      if turn_number > 4 {game_over = check_board(&board);} //Can only get set of 3 on turn 5 or after
+      if turn_number>4 {game_over = check_board(&board);} //Can only get set of 3 on turn 5 or after
       if game_over{
         match player_turn{
           true => {println!("\nCongratulations, you won this game!\n");display_board(&board);break;},
@@ -70,26 +66,28 @@ fn main() {
         }
       }      
       turn_number=&turn_number+1;
-      player_turn = !&player_turn;
+      player_turn=!&player_turn;
     };    
     //Game Over - print game moves
     println!("\n*** Game Over! ***\n");
     show_game_moves(&board, &choices_made, &player_symbol);  
-    //Retry Game Loop  
-    loop{    
-      println!("\nDo you wish to try again? (Y/N)");
-      let mut play_again = String::new();
-      io::stdin().read_line(&mut play_again)
-        .expect("Failed to read line");
-      match play_again.trim(){
-        c if c.to_lowercase().eq("n") => {playing=false; break;},
-        c if c.to_lowercase().eq("y") => {println!("Setting up new round..."); break;},            
-        _  => {println!("Not Valid, try again"); continue;}, 
-      };
-    };    
+    //Retry Game Loop
+    playing = retry_game();     
   }
   //End Message
   print!("\nThanks for Playing!");
+}
+
+fn decide_start(max_value :i32, min_value :i32) -> bool{
+  let mut player_start :bool = false;
+  let rng_num :i32 = rand::thread_rng().gen_range(min_value..(max_value+1));
+    println!("Deciding who goes first, random number drawn was '{}'",rng_num);
+    if rng_num % 2 == 0 {
+      player_start = true;
+       return player_start ; //even Number - Player start            
+    } else {      
+      return player_start; //odd Number - CPU start
+    }    
 }
 
 fn display_board(board : &HashMap<i32, &str>) {
@@ -120,10 +118,11 @@ fn player_move(max_value :i32, min_value :i32, board: &HashMap<i32,&str>, choice
       g if g < min_value => {println!("Out of Bounds: Too small!\n"); continue;}, 
       _ => {
         if choices_made.contains(&choice) { 
-          println!("\n'{}' has already been picked, try again.\n",choice);
+          println!("\n'{}' has already been picked, try again.\n", &choice);
           display_board(&board);
           continue;                
         } else {
+          println!("Player choice is {}.\n", &choice);
           return choice;                          
         } 
       }
@@ -179,4 +178,19 @@ fn show_game_moves(board : &HashMap<i32, &str>,choices_made : &Vec<i32>, player_
     }
     choice_no=&choice_no+1;
   }  
+}
+
+fn retry_game()-> bool{
+  let mut retry_game : bool = true;
+  loop{    
+    println!("\nDo you wish to try again? (y/n)");
+    let mut play_again = String::new();
+    io::stdin().read_line(&mut play_again)
+      .expect("Failed to read line.");
+    match play_again.trim(){
+      c if c.to_lowercase().eq("n") => {retry_game=false; return retry_game;},
+      c if c.to_lowercase().eq("y") => {println!("Setting up new round..."); return retry_game;},            
+      _ => {println!("Not Valid, try again."); continue;}, 
+    };
+  }
 }
